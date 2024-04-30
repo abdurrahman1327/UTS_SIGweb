@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas UTS</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+        integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="Data/uts.css">
+</head>
+<body>
+    <div class="container">
+        <div class="kotak1">
+            <H1>Persebaran Lokasi yang Pernah Dikunjungi Dalam Kurun Waktu Satu Tahun</H1>
+        </div>
+        
+        <div class="map-container">
+            <div id="map" style="width: 80%; height: 640px; margin:auto;"></div>
+        </div>
+        <div class="info">
+            <div id="scale"></div>
+            <div id="northarrow"></div>
+        </div>
+        <div class="akhir">
+            <h2>Dibuat Oleh </h2>
+            <p style="font-size: 20px;">Pawana Abdurrahman (22/503059/SV/21471)</p>
+        </div>
+    </div>
+    <script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
+    <script>
+        // initialize the map
+        var map = L.map('map').setView([-7.790395,110.380609], 8);
+        var mapLink = '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+        
+        // Basemaps
+        var baseLayers = {
+            "OpenStreetMap": L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; ' + mapLink + ' Contributors',
+                maxZoom: 18
+            }),
+            "Satellite": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '&copy; Esri &mdash; Source: Esri',
+                maxZoom: 18
+            }),
+            "Dark": L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+                attribution: '© <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+                maxZoom: 19
+            }),
+           
+        };
+
+        // Add basemaps to map
+        L.control.layers(baseLayers).addTo(map);
+        
+        // Set default basemap
+        baseLayers["OpenStreetMap"].addTo(map);
+
+        // load GeoJSON from an external file
+        $.getJSON("https://raw.githubusercontent.com/abdurrahman1327/UTS_SIGweb/main/Data%20koor.geojson", function (data) {
+            var heat = L.heatLayer(data, {
+                radius: 20,
+                blur: 13,
+                maxZoom: 10
+            }).addTo(map);
+        });
+
+        // Add scale
+        L.control.scale({position: 'bottomleft'}).addTo(map);
+
+    </script>
+    
+</body>
+</html>
